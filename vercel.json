@@ -1,8 +1,6 @@
 {
-  "framework": null,
-  "buildCommand": null,
-  "devCommand": null,
-  "installCommand": null,
-  "outputDirectory": "frontend",
-  "public": true
+  "version": 2,
+  "builds": [
+    { "src": "*.html", "use": "@vercel/static" }
+  ]
 }
