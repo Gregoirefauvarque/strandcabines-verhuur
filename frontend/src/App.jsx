@@ -1,5 +1,10 @@
+```jsx
 import React, { useState } from 'react';
 
+// API URL configuratie
+const API_URL = import.meta.env.VITE_API_URL || 'https://strandcabines-verhuur.vercel.app/api';
+
+// BookingForm Component
 function BookingForm({ cabin, onClose }) {
   const [formData, setFormData] = useState({
     name: '',
@@ -22,15 +27,33 @@ function BookingForm({ cabin, onClose }) {
         return;
       }
 
-      // Simuleer API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Maak FormData object voor de upload
+      const submitData = new FormData();
+      Object.entries(formData).forEach(([key, value]) => {
+        submitData.append(key, value);
+      });
+      submitData.append('cabinId', cabin.id);
+      if (idCard) {
+        submitData.append('idCard', idCard);
+      }
+
+      // Verstuur naar de API
+      const response = await fetch(`${API_URL}/bookings`, {
+        method: 'POST',
+        body: submitData
+      });
+
+      if (!response.ok) {
+        throw new Error('Booking failed');
+      }
+
       setShowConfirmation(true);
-      
       setTimeout(() => {
         setShowConfirmation(false);
         onClose();
       }, 3000);
     } catch (error) {
+      console.error('Error:', error);
       alert('Er ging iets mis. Probeer het opnieuw.');
     }
 
@@ -59,7 +82,7 @@ function BookingForm({ cabin, onClose }) {
             <input
               type="text"
               required
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border rounded focus:outline-none focus:border-blue-500"
               value={formData.name}
               onChange={(e) => setFormData({...formData, name: e.target.value})}
             />
@@ -70,7 +93,7 @@ function BookingForm({ cabin, onClose }) {
             <input
               type="email"
               required
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border rounded focus:outline-none focus:border-blue-500"
               value={formData.email}
               onChange={(e) => setFormData({...formData, email: e.target.value})}
             />
@@ -81,7 +104,7 @@ function BookingForm({ cabin, onClose }) {
             <input
               type="tel"
               required
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border rounded focus:outline-none focus:border-blue-500"
               value={formData.phone}
               onChange={(e) => setFormData({...formData, phone: e.target.value})}
             />
@@ -90,7 +113,7 @@ function BookingForm({ cabin, onClose }) {
           <div>
             <label className="block mb-1 font-medium">Periode</label>
             <select
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border rounded focus:outline-none focus:border-blue-500"
               value={formData.period}
               onChange={(e) => setFormData({...formData, period: e.target.value})}
             >
@@ -106,9 +129,9 @@ function BookingForm({ cabin, onClose }) {
             <input
               type="date"
               required
-              className="w-full p-2 border rounded"
               min="2025-04-01"
               max="2025-09-30"
+              className="w-full p-2 border rounded focus:outline-none focus:border-blue-500"
               value={formData.startDate}
               onChange={(e) => setFormData({...formData, startDate: e.target.value})}
             />
@@ -154,61 +177,63 @@ function BookingForm({ cabin, onClose }) {
   );
 }
 
+// Cabins data
+const cabins = [
+  {
+    id: 1,
+    name: "Strandcabine 1",
+    inventory: [
+      "1 Tafel",
+      "2 Stoelen", 
+      "2 Strandstoelen",
+      "1 Gordijn",
+      "Strandspeelgoed",
+      "1 Borsteltje"
+    ],
+    prices: {
+      day: 50,
+      twoWeeks: 200,
+      months: {
+        april: 350,
+        may: 400,
+        june: 500,
+        july: 500,
+        august: 500,
+        september: 350
+      },
+      season: 1800
+    }
+  },
+  {
+    id: 2,
+    name: "Strandcabine 2",
+    inventory: [
+      "1 Tafel",
+      "2 Stoelen",
+      "2 Strandstoelen",
+      "1 Gordijn",
+      "Strandspeelgoed",
+      "1 Borsteltje"
+    ],
+    prices: {
+      day: 50,
+      twoWeeks: 200,
+      months: {
+        april: 350,
+        may: 400,
+        june: 500,
+        july: 500,
+        august: 500,
+        september: 350
+      },
+      season: 1800
+    }
+  }
+];
+
+// Main App Component
 export default function App() {
   const [selectedCabin, setSelectedCabin] = useState(null);
-
-  const cabins = [
-    {
-      id: 1,
-      name: "Strandcabine 1",
-      inventory: [
-        "1 Tafel",
-        "2 Stoelen", 
-        "2 Strandstoelen",
-        "1 Gordijn",
-        "Strandspeelgoed",
-        "1 Borsteltje"
-      ],
-      prices: {
-        day: 50,
-        twoWeeks: 200,
-        months: {
-          april: 350,
-          may: 400,
-          june: 500,
-          july: 500,
-          august: 500,
-          september: 350
-        },
-        season: 1800
-      }
-    },
-    {
-      id: 2,
-      name: "Strandcabine 2",
-      inventory: [
-        "1 Tafel",
-        "2 Stoelen",
-        "2 Strandstoelen",
-        "1 Gordijn",
-        "Strandspeelgoed",
-        "1 Borsteltje"
-      ],
-      prices: {
-        day: 50,
-        twoWeeks: 200,
-        months: {
-          april: 350,
-          may: 400,
-          june: 500,
-          july: 500,
-          august: 500,
-          september: 350
-        },
-        season: 1800
-      }
-    }
-  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-100 to-white p-8">
@@ -259,3 +284,19 @@ export default function App() {
                 className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors font-medium"
               >
                 Reserveer Nu
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {selectedCabin && (
+        <BookingForm 
+          cabin={selectedCabin}
+          onClose={() => setSelectedCabin(null)}
+        />
+      )}
+    </div>
+  );
+}
+```
