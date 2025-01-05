@@ -1,11 +1,10 @@
 ```json
 {
-  "version": 2,
-  "builds": [
-    { "src": "frontend/**/*", "use": "@vercel/static" }
-  ],
-  "routes": [
-    { "src": "/(.*)", "dest": "/frontend/$1" }
-  ]
+  "framework": null,
+  "buildCommand": null,
+  "devCommand": null,
+  "installCommand": null,
+  "outputDirectory": "frontend",
+  "public": true
 }
 ```
