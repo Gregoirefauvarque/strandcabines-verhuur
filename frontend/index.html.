@@ -1,0 +1,16 @@
+```html
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/beach-umbrella.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Strandcabines Blankenberge</title>
+    <meta name="description" content="Verhuur van strandcabines in Blankenberge" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
+```
